@@ -5,7 +5,9 @@
 
 within the electron app click `connect` then `send message` a few times
 
-the socket-listener will only show the first message until it sends a test message after 6 seconds
+First message is sent instantly but any subsequent messages seem to buffer in windows until the server writes to the socket.
+
+within electron socket.write() returns `true` indicating the buffer was flushed, but the callback is not triggered.
 
 ```
 server listening 127.0.0.1:5734

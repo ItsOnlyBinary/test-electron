@@ -39,7 +39,11 @@
                 }
 
                 msgId++;
-                socket.write('test ' + msgId + '\r\n');
+                const outMsgId = msgId;
+                const val = socket.write('test ' + outMsgId + '\r\n', () => {
+                    console.log('callback message id:', outMsgId);
+                });
+                console.log('sent message id: '+ outMsgId + ', return val:', val);
 
                 span.innerText = 'Last message id: ' + msgId;
             }
