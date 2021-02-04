@@ -1,0 +1,62 @@
+<html>
+    <head>
+        <script>
+            const tls = require('tls');
+
+            let msgId = 0;
+            let socket = null;
+
+            function doTest() {
+                const span = document.querySelector('span');
+                const button = document.querySelector('button');
+
+                if (!socket) {
+                    socket = tls.connect({
+                        host: '127.0.0.1',
+                        port: 5734,
+                        family: 'IPv4',
+                        rejectUnauthorized: false,
+                    });
+
+                    socket.on('connect', () => {
+                        console.log('socket connected');
+                    });
+
+                    socket.on('data', (data) => {
+                        console.log('data:', data.toString());
+                    });
+
+                    socket.on('error', (error) => {
+                        console.log('socket error', error);
+                    });
+
+                    socket.on('close', (data) => {
+                        console.log('socket closed');
+                    });
+
+                    button.innerText = 'Click to send message';
+                    return;
+                }
+
+                msgId++;
+                socket.write('test ' + msgId + '\r\n');
+
+                span.innerText = 'Last message id: ' + msgId;
+            }
+        </script>
+        <style>
+            body {
+                background-color: white;
+                color: black;
+            }
+            span {
+                display: block;
+                margin-bottom: 20px;
+            }
+        </style>
+    </head>
+    <body>
+        <span>Last message id: 0</span>
+        <button onclick="doTest()">Click to connect</button>
+    </body>
+</html>
